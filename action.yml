@@ -20,6 +20,9 @@ inputs:
   owner:
     description: "Owner of the given repository."
     required: true
+  branch_id:
+    description: "Identifier of the branch triggering this action"
+    required: false
   workflow:
     description: "Workflow to return an ID for. Can be the ID or the workflow filename."
     required: true
