@@ -16,6 +16,7 @@ describe("Action", () => {
         ref: "feature_branch",
         repo: "repository",
         owner: "owner",
+        branchId: "BF-1234",
         workflow: "workflow_name",
         workflow_inputs: JSON.stringify(workflowInputs),
         workflow_timeout_seconds: 60,
@@ -31,6 +32,8 @@ describe("Action", () => {
             return mockEnvConfig.repo;
           case "owner":
             return mockEnvConfig.owner;
+          case "branchId":
+            return mockEnvConfig.branchId;
           case "workflow":
             return mockEnvConfig.workflow;
           case "workflow_inputs":

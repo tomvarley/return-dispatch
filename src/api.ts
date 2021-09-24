@@ -13,18 +13,32 @@ export function init(cfg?: ActionConfig): void {
   octokit = github.getOctokit(config.token);
 }
 
-export async function dispatchWorkflow(distinctId: string): Promise<void> {
+export async function dispatchWorkflow(
+  distinctId: string,
+  branchId?: string
+): Promise<void> {
   try {
     // https://docs.github.com/en/rest/reference/actions#create-a-workflow-dispatch-event
+    let inputs;
+
+    if (branchId) {
+      inputs = {
+        ...(config.workflowInputs ? config.workflowInputs : undefined),
+        distinct_id: distinctId,
+        branch_id: branchId,
+      };
+    } else {
+      inputs = {
+        ...(config.workflowInputs ? config.workflowInputs : undefined),
+        distinct_id: distinctId,
+      };
+    }
     const response = await octokit.rest.actions.createWorkflowDispatch({
       owner: config.owner,
       repo: config.repo,
       workflow_id: config.workflow,
       ref: config.ref,
-      inputs: {
-        ...(config.workflowInputs ? config.workflowInputs : undefined),
-        distinct_id: distinctId,
-      },
+      inputs: inputs,
     });
 
     if (response.status !== 204) {
@@ -41,7 +55,8 @@ export async function dispatchWorkflow(distinctId: string): Promise<void> {
         (config.workflowInputs
           ? `  Workflow Inputs: ${JSON.stringify(config.workflowInputs)}\n`
           : ``) +
-        `  Distinct ID: ${distinctId}`
+        `  Distinct ID: ${distinctId}\n` +
+        `  Branch ID: ${branchId}`
     );
   } catch (error) {
     if (error instanceof Error) {

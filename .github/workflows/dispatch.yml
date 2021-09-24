@@ -4,6 +4,8 @@ on:
     inputs:
       distinct_id:
         required: true
+      branch_id:
+        required: false
       cake: # Test for input passthrough.
         required: true
 
@@ -13,5 +15,7 @@ jobs:
     steps:
       - name: echo distinct ID ${{ github.event.inputs.distinct_id }}
         run: echo ${{ github.event.inputs.distinct_id }}
+      - name: echo branch ID ${{ github.event.inputs.branch_id }}
+        run: echo ${{ github.event.inputs.branch_id }}
       - name: echo input passthrough
         run: echo ${{ github.event.inputs.cake }}

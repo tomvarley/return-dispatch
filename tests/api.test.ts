@@ -60,7 +60,7 @@ describe("API", () => {
           })
         );
 
-      await dispatchWorkflow("");
+      await dispatchWorkflow("", "");
     });
 
     it("should throw if a non-204 status is returned", async () => {
@@ -96,6 +96,28 @@ describe("API", () => {
       await dispatchWorkflow(distinctId);
       expect(dispatchedId).toStrictEqual(distinctId);
     });
+  });
+
+  it("should dispatch with a distinctId and branchId in the inputs", async () => {
+    const distinctId = uuid();
+    const branchId = "BF-1234";
+    let dispatchedId: string | undefined;
+    let dispatchedbranchId: string | undefined;
+    jest
+      .spyOn(mockOctokit.rest.actions, "createWorkflowDispatch")
+      .mockImplementation(async (req?: any) => {
+        dispatchedId = req.inputs.distinct_id;
+        dispatchedbranchId = req.inputs.branch_id;
+
+        return {
+          data: undefined,
+          status: 204,
+        };
+      });
+
+    await dispatchWorkflow(distinctId, branchId);
+    expect(dispatchedId).toStrictEqual(distinctId);
+    expect(dispatchedbranchId).toStrictEqual(branchId);
   });
 
   describe("getWorkflowId", () => {

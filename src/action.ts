@@ -27,6 +27,11 @@ export interface ActionConfig {
   owner: string;
 
   /**
+   * branchId of branch being run
+   */
+  branchId?: string;
+
+  /**
    * Workflow to return an ID for. Can be the ID or the workflow filename.
    */
   workflow: string | number;
@@ -56,6 +61,7 @@ export function getConfig(): ActionConfig {
     ref: core.getInput("ref", { required: true }),
     repo: core.getInput("repo", { required: true }),
     owner: core.getInput("owner", { required: true }),
+    branchId: core.getInput("branchId", { required: false }),
     workflow: getWorkflowValue(core.getInput("workflow", { required: true })),
     workflowInputs: getWorkflowInputs(core.getInput("workflow_inputs")),
     workflowTimeoutSeconds:
